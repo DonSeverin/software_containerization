@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Post a blog</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Write your note here..."></textarea>
+        <button type="submit">Post Note</button>
+    </form>
+    <a href="blog_get">View Notes</a>
+</body>
+</html>

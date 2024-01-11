@@ -1,0 +1,20 @@
+# Kill Port
+sudo fuser -k 8000/tcp  
+
+# postgress incase of a refresh 
+
+sudo -u postgres psql
+postgres=# create database blog_db;
+postgres=# create user blogger with encrypted password 'Self.blogdb';
+postgres=# grant all privileges on database blog_db to blogger;
+
+# Startup 
+
+Run Environment: source fioenv/bin/activate
+Directory: cd flintio_ws/
+Run: python3 manage.py runserver 
+install req: pip3 install -r requirments.txt
+
+
+
+
