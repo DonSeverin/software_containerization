@@ -125,7 +125,7 @@ export default function Feed() {
     return (
         <div className="w-full h-full bg-black px-2 ">
             <Tab.Group >
-                <Tab.List className="flex justify-center space-x-1 rounded-xl bg-blue-900/20 p-1">
+                <Tab.List className="flex justify-center space-x-2 rounded-xl bg-blue-900/20 p-1">
                     {Object.keys(categories).map((category) => (
                         <Tab
                             key={category}
