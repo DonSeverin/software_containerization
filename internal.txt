@@ -1,0 +1,84 @@
+# Kill Port
+sudo fuser -k 8000/tcp  
+
+# postgress incase of a refresh 
+
+sudo -u postgres psql
+postgres=# create database blog_db;
+postgres=# create user blogger with encrypted password 'Self.blogdb';
+postgres=# grant all privileges on database blog_db to blogger;
+
+# Startup 
+Run Environment: source fioenv/bin/activate
+Directory: cd flintio_ws/
+Run: python3 manage.py runserver 
+install req: pip3 install -r requirments.txt
+
+
+
+# docker commands
+
+# Remove containers
+docker rm -f <the-container-id>: remove and stop container 
+
+# Create Network 
+docker network create blog_network
+
+# Access Database
+docker exec -it 084a66a9c630 psql -U blogger -d blog_db
+
+#push to docker hub
+docker tag local-image:tagname new-repo:tagname
+docker push new-repo:tagname
+
+# inspecting container - networking
+docker run -it --network blog_network nicolaka/netshoot
+
+
+# Build comands for docker apps
+----------------------------------------------------------
+# build docker image
+docker build -t 35783594/blogger_app:latest .
+docker build -t 35783594/blogger_api:latest .
+----------------------------------------------------------
+
+
+# Creation commands for docker
+-------------------------------------------------------------
+
+# Run Database from downloaded image
+docker run -d \
+  --network blog_network --network-alias blog_network \
+  -v blog-postgresql-data:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD="Self.blogdb" \
+  -e POSTGRES_USER=blogger \
+  -e POSTGRES_DB=blog_db \
+  postgres
+
+
+# Run web app connected to database Dockerfile
+docker run -dp 8000:8000 \
+  -w /app -v "$(pwd):/app" \
+  --network blog_network \
+  -e POSTGRES_HOST=blog_network \
+  -e POSTGRES_PASSWORD="Self.blogdb" \
+  -e POSTGRES_USER=blogger \
+  -e POSTGRES_DB=blog_db \
+  --name bloggerappcontainer \
+  35783594/blogger_app
+
+  
+# Run api app connected to database Dockerfile
+docker run -dp 3000:3000 \
+  -w /app -v "$(pwd):/app" \
+  --network blog_network \
+  -e POSTGRES_HOST=blog_network \
+  -e POSTGRES_PASSWORD="Self.blogdb" \
+  -e POSTGRES_USER=blogger \
+  -e POSTGRES_DB=blog_db \
+  --name apiappcontainer \
+  35783594/blogger_api
+
+  ------------------------------------------------------------
+ 
+  

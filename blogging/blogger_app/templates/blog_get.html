@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read Blogs</title>
+</head>
+<body>
+    <h1>Post</h1>
+    {% for post in post %}
+        <p>{{ post.content }}</p>
+    {% endfor %}
+    <a href="blog_post">Post a Note</a>
+</body>
+</html>
