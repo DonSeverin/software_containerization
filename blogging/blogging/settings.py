@@ -28,8 +28,8 @@ SECRET_KEY = 'django-insecure-xw@*onqsg7n7o5t2$dwbc62m2@&8o@6gxy*wzbop+yib)_n5vi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['api_app_container', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'blogger_app',
     # 'blogging_api',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,12 +92,12 @@ WSGI_APPLICATION = 'blogging.wsgi.application'
 #     }
 # }
 
-#docker settings
+# docker settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'blog_db '),
-        'USER': os.environ.get('POSTGRES_USER', 'blogger '),
+        'NAME': os.environ.get('POSTGRES_DB', 'blog_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'blogger'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'Self.blogdb'),
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': '5432',

@@ -1,23 +1,17 @@
-from django.shortcuts import render
-from .models import Post
-from django.http import HttpResponseRedirect
-
+from django.shortcuts import render, redirect
+import requests
 
 # Create your views here.
 def blog_post(request):
-    if request.method == "POST":
-        content = request.POST.get('content')
-        Post.objects.create(content=content)
-        return HttpResponseRedirect('blog_get')
+    # Log the Host header
+    host_header = request.get_host()
+    print("Host header received:", host_header)
+          
+    if request.method == 'POST':
+        post_text = request.POST.get('post')
+        requests.post('http://apiappcontainer:3000/post/', data={'content': post_text})
 
-    context = {}
-    return render(request, 'blogger_app/templates/blog_post.html', context)
-
-
-
-# Create your views here.
-def blog_get(request):
-    post = Post.objects.all()
-
+    response = requests.get('http://apiappcontainer:3000/post/')
+    post = response.json() if response.status_code == 200 else []
     
-    return render(request, 'blogger_app/templates/blog_get.html',  {'post': post})
+    return render(request, 'blogger_app/templates/blog_post.html',  {'post': post})

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--DOCTYPE html>
 <html>
 <head>
     <title>Post a blog</title>
@@ -11,4 +11,18 @@
     </form>
     <a href="blog_get">View Notes</a>
 </body>
-</html>
+</html-->
+
+
+<!-- post.html -->
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="post" placeholder="Write your comment here..."></textarea>
+    <button type="submit">Post blog</button>
+</form>
+
+<ul>
+    {% for post in post %}
+        <li>{{ post.content }} </li>
+    {% endfor %}
+</ul>
