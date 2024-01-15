@@ -8,119 +8,39 @@ function classNames(...classes) {
 
 export default function Feed() {
     let [categories] = useState({
-        Recent: [
+        Posts: [
             {
                 id: 1,
                 title: 'Does drinking coffee make you smarter?',
-                date: '5h ago',
+                content: 'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
                 commentCount: 5,
                 shareCount: 2,
             },
             {
                 id: 2,
                 title: "So you've bought coffee... now what?",
-                date: '2h ago',
+                content: 'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
                 commentCount: 3,
                 shareCount: 2,
             },
         ],
-        Popular: [
+        Mine: [
             {
                 id: 1,
-                title: 'Is tech making coffee better or worse?',
-                date: 'Jan 7',
-                commentCount: 29,
-                shareCount: 16,
-            },
-            {
-                id: 2,
-                title: 'The most innovative things happening in coffee',
-                date: 'Mar 19',
-                commentCount: 24,
-                shareCount: 12,
-            },
-        ],
-        Trending: [
-            {
-                id: 1,
-                title: 'Ask Me Anything: 10 answers to your questions about coffee',
-                date: '2d ago',
-                commentCount: 9,
-                shareCount: 5,
-            },
-            {
-                id: 2,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
+                title: 'Does drinking coffee make you smarter?',
+                content: 'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
+                commentCount: 5,
                 shareCount: 2,
-            },
-            {
-                id: 3,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 4,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 5,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 6,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 7,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 8,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 9,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 10,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            {
-                id: 11,
-                title: "The worst advice we've ever heard about coffee",
-                date: '4d ago',
-                commentCount: 1,
-                shareCount: 2,
-            },
-            
-        ],
+            }
+        ]
     });
+
+
+    const [selectedPost, setSelectedPost] = useState(null);
+
+    const handlePostClick = (post) => {
+        setSelectedPost(post);
+    }
 
     return (
         <div className="w-full h-full bg-black px-2 ">
@@ -134,7 +54,7 @@ export default function Feed() {
                                     'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                                     'ring-white/60 ring-offset-2 focus:outline-none focus:ring-2',
                                     selected
-                                        ? 'bg-white text-blue-700 shadow'
+                                        ? 'bg-white test-black shadow'
                                         : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
                                 )
                             }
@@ -156,13 +76,18 @@ export default function Feed() {
                                 {posts.map((post) => (
                                     <li
                                         key={post.id}
-                                        className="relative text rounded-md p-3 text-white hover:bg-gray-100 hover:text-black"
+                                        className = {`relative text rounded-md p-3 text-white hover:bg-gray-100 hover:text-black`}
+                                        onClick={() => handlePostClick(post)}
                                     >
-                                        <h3 className="text-sm font-medium leading-5">
+                                        <h3 className="text-lg font-medium leading-5">
                                             {post.title}
                                         </h3>
-
-                                        <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                                        {selectedPost === post && (
+                                            <p className="mt-2 text-lg font-normal leading-4">
+                                            PostedTime: {post.content}
+                                          </p>
+                                        )}
+                                        <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500 ">
                                             <li>{post.commentCount} likes</li>
                                             <li>&middot;</li>
                                             <li>{post.shareCount} comments</li>
