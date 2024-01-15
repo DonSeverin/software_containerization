@@ -43,7 +43,7 @@ export default function Feed() {
     }
 
     return (
-        <div className="w-full h-full bg-black px-2 ">
+        <div className="w-full h-full bg-black px-2 " >
             <Tab.Group >
                 <Tab.List className="flex justify-center space-x-2 rounded-xl bg-blue-900/20 p-1">
                     {Object.keys(categories).map((category) => (
@@ -52,12 +52,13 @@ export default function Feed() {
                             className={({ selected }) =>
                                 classNames(
                                     'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                                    'ring-white/60 ring-offset-2 focus:outline-none focus:ring-2',
+                                    'ring-white/60 ring-offset-2 focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out',
                                     selected
                                         ? 'bg-white test-black shadow'
                                         : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
                                 )
                             }
+                            
                         >
                             {category}
                         </Tab>
@@ -69,21 +70,22 @@ export default function Feed() {
                             key={idx}
                             className={classNames(
                                 'rounded-xl bg-blue-900/20 p-3',
-                                'ring-white/60 ring-offset-2 ring-offset-black focus:outline-none focus:ring-2'
+                                'ring-white/60 ring-offset-2 ring-offset-black focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out'
                             )}
                         >
                             <ul>
                                 {posts.map((post) => (
                                     <li
                                         key={post.id}
-                                        className = {`relative text rounded-md p-3 text-white hover:bg-gray-100 hover:text-black`}
+                                        className = {`relative text rounded-md p-3 text-white hover:bg-gray-100 hover:text-black transition-all duration-300 ease-in-out`}
                                         onClick={() => handlePostClick(post)}
+                                        onMouseOver={() => handlePostClick(post)}
                                     >
                                         <h3 className="text-lg font-medium leading-5">
                                             {post.title}
                                         </h3>
                                         {selectedPost === post && (
-                                            <p className="mt-2 pl-5 text-base font-normal leading-4">
+                                            <p className="mt-2 py-3 pl-5 text-base font-normal leading-4">
                                             PostedTime: {post.content}
                                           </p>
                                         )}
@@ -96,7 +98,7 @@ export default function Feed() {
                                         <button
                                             className={classNames(
                                                 'absolute inset-0 rounded-md',
-                                                'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out'
                                             )}
                                         />
                                     </li>
