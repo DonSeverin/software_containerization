@@ -83,7 +83,7 @@ export default function Feed() {
                                             {post.title}
                                         </h3>
                                         {selectedPost === post && (
-                                            <p className="mt-2 text-lg font-normal leading-4">
+                                            <p className="mt-2 pl-5 text-base font-normal leading-4">
                                             PostedTime: {post.content}
                                           </p>
                                         )}
