@@ -11,7 +11,7 @@ RUN npm install -D tailwindcss
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 80
 
 CMD [ "npm", "run", "start" ]
 
