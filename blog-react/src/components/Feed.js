@@ -1,48 +1,56 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tab } from '@headlessui/react';
+import PostButton from './PostButton';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Feed() {
-  let [categories] = useState({
+  let [category] = useState({
     Posts: [
       {
         id: 1,
-        title: 'Does drinking coffee make you smarter?',
-        content:
-          'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
-        commentCount: 5,
-        shareCount: 2,
-      },
-      {
-        id: 2,
-        title: "So you've bought coffee... now what?",
-        content:
-          'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
-        commentCount: 3,
-        shareCount: 2,
-      },
-    ],
-    Mine: [
-      {
-        id: 1,
-        title: 'Does drinking coffee make you smarter?',
-        content:
-          'Containerization, also referred as container stuffing or container loading, is the process of unitization of cargoes in exports. Containerization is the predominant form of unitization of export cargoes, as opposed to other systems such as the barge system or palletization. The containers have standardized dimensions.',
-        commentCount: 5,
-        shareCount: 2,
-      },
+        title: "Why we really need K8s",
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        date: "2024-01-14",
+    }
+    ,
+    {
+      id: 2,
+      title: "Why we really need K8s",
+      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      date: "2024-01-14",
+  },
     ],
   });
 
   const [selectedPost, setSelectedPost] = useState(null);
-
+  const [categories, setCategories] = useState({
+    Posts: [],
+  });
   const handlePostClick = (post) => {
     setSelectedPost(post);
   };
+
+  useEffect(() => {
+    // Fetch posts from the provided API endpoint
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('https://dummyjson.com/posts?limit=8');
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+        const data = await response.json();
+        setCategories({ Posts: data.posts });
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <div className="w-full h-full bg-black px-2 ">
@@ -86,13 +94,12 @@ export default function Feed() {
                     </h3>
                     {selectedPost === post && (
                       <p className={`mt-2 py-3 pl-5 text-base font-normal leading-4 `}>
-                        PostedTime: {post.content}
+                        {post.body}
                       </p>
                     )}
                     <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500 ">
-                      <li>{post.commentCount} likes</li>
-                      <li>&middot;</li>
-                      <li>{post.shareCount} comments</li>
+                      <li>date: {post.date} </li>
+                      
                     </ul>
 
                     <button
@@ -108,6 +115,9 @@ export default function Feed() {
           ))}
         </Tab.Panels>
       </Tab.Group>
+      <PostButton/>
+      
+        
     </div>
   );
 }
