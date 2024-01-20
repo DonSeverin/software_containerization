@@ -1,23 +1,32 @@
 # Stage 1: Build React app
-FROM node:lts-alpine
+FROM node:lts-alpine as build-stage
 
-WORKDIR /app
+RUN mkdir /usr/app
 
-COPY package*.json ./
+COPY . /usr/app
+
+COPY package*.json /usr/app
+
+WORKDIR /usr/app
 
 RUN npm install
 
 RUN npm install -D tailwindcss
 
-COPY . .
+ENV PATH "/usr/src/app/node_modules/.bin:$PATH"
+
 
 RUN npm run build
 
-FROM nginx:1.21.0-alpine
 
-COPY ngnix.conf /etc/nginx/conf.d/default.conf
+# Stage 2: Serve React app with nginx
+FROM nginx:alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf ./*
+
+COPY --from=build-stage /usr/app/build .
 
 EXPOSE 80
 
