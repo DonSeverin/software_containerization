@@ -56,7 +56,7 @@ export default function Feed() {
                   'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                   'ring-white/60 ring-offset-2 focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out',
                   selected
-                    ? 'bg-white test-black shadow'
+                    ? 'bg-white text-black shadow'
                     : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
                 )
               }
@@ -69,34 +69,23 @@ export default function Feed() {
           {Object.values(categories).map((posts, idx) => (
             <Tab.Panel
               key={idx}
-              className={classNames(
+              className={`
                 'rounded-xl bg-blue-900/20 p-3',
                 'ring-white/60 ring-offset-2 ring-offset-black focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out'
-              )}
+             `}
             >
               <ul>
                 {posts.map((post) => (
                   <li
                     key={post.id}
-                    className={`relative text rounded-md p-3 text-white hover:bg-gray-100 hover:text-black transition-all duration-300 ease-in-out`}
+                    className={`relative text rounded-md p-3 text-white hover:bg-white/[0.12]  transition-all duration-300 ease-in-out ${selectedPost === post ? 'text-black' : ''}`}
                     onClick={() => handlePostClick(post)}
-                    onMouseOver={() => {
-                      const delay = 2000; // Set the delay in milliseconds (2 seconds in this case)
-
-                      // Use setTimeout to open the post after the specified delay
-                      const timeoutId = setTimeout(() => {
-                        handlePostClick(post);
-                      }, delay);
-
-                      // Clear the timeout if the mouse leaves before the delay
-                      return () => clearTimeout(timeoutId);
-                    }}
                   >
-                    <h3 className="text-lg font-medium leading-5">
+                    <h3 className={`text-lg font-medium leading-5 `}>
                       {post.title}
                     </h3>
                     {selectedPost === post && (
-                      <p className="mt-2 py-3 pl-5 text-base font-normal leading-4">
+                      <p className={`mt-2 py-3 pl-5 text-base font-normal leading-4 `}>
                         PostedTime: {post.content}
                       </p>
                     )}
@@ -109,7 +98,7 @@ export default function Feed() {
                     <button
                       className={classNames(
                         'absolute inset-0 rounded-md',
-                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out'
+                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out '
                       )}
                     />
                   </li>
