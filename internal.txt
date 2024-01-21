@@ -2,22 +2,14 @@
 sudo fuser -k 8000/tcp  
 
 # postgress incase of a refresh 
-
 sudo -u postgres psql
 postgres=# create database blog_db;
 postgres=# create user blogger with encrypted password 'Self.blogdb';
 postgres=# grant all privileges on database blog_db to blogger;
 
-# Startup 
-Run Environment: source fioenv/bin/activate
-Directory: cd flintio_ws/
-Run: python3 manage.py runserver 
-install req: pip3 install -r requirments.txt
-
-
 
 # docker commands
-
+--------------------------------------------------------
 # Remove containers
 docker rm -f <the-container-id>: remove and stop container 
 
@@ -25,7 +17,7 @@ docker rm -f <the-container-id>: remove and stop container
 docker network create blog_network
 
 # Access Database
-docker exec -it 084a66a9c630 psql -U blogger -d blog_db
+docker exec -it 82864a9d45eb psql -U blogger -d blog_db
 
 #push to docker hub
 docker tag local-image:tagname new-repo:tagname
@@ -81,4 +73,7 @@ docker run -dp 3000:3000 \
 
   ------------------------------------------------------------
  
+  # Kubernetes
+
+
   
