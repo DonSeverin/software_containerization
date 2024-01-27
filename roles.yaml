@@ -1,0 +1,68 @@
+#ServiceAccounts
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: service-user
+EOF
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: service-admin
+EOF
+
+#Create a Role for the webui deployment that allows it to get, watch and list pods:
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+
+
+#Create a RoleBinding for the webui user:
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: service-user
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+
+#Create a Role for the webapi deployment that allows it to
+#get, watch, list, create, delete, and update services across all namespaces
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: service-manager
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "watch", "list", "create", "delete", "update"]
+
+
+#Create a RoleBinding for the webapi user:
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: manage-services
+subjects:
+- kind: ServiceAccount
+  name: service-admin
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: service-manager
+  apiGroup: rbac.authorization.k8s.io
+

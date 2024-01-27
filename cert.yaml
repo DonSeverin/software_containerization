@@ -1,0 +1,70 @@
+#Create a selfsigned ClusterIssuer to create a selfsigned Certificate cluseterwide
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+    name: selfsigned-cluster-issuer
+    #namespace: default
+spec:
+    selfSigned: {}
+
+#Apply with kubectl apply -f self-signed-cluser-issuer.yaml
+
+#SelfSigned issuers can be used to
+#bootstrap a custom root certificate for a
+#private CA.
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+    name: my-selfsigned-ca
+    #namespace: default 
+spec:
+    isCA: true
+    commonName: my-selfsigned-ca
+    secretName: root-secret
+    privateKey:
+        algorithm: ECDSA
+        size: 256
+    issuerRef:
+        name: selfsigned-cluster-issuer
+        kind: ClusterIssuer
+        group: cert-manager.io
+
+#CA ClusterIssuer
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+    name: my-ca-cluster-issuer
+spec:
+ca:
+    secretName: root-secret
+
+#Configure ingress with a certificate signed by CA issuer
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    annotations:
+        # add an annotation indicating the issuer to use.
+        cert-manager.io/issuer: my-ca-issuer
+        cert-manager.io/common-name: mydomain.com
+    name: my-ingress
+    namespace: sandbox
+spec:
+    rules:
+        - host: mydomain.com
+        http:
+            paths:
+                - pathType: Prefix
+                path: /
+                backend:
+                    service:
+                        name: myservice
+                        port:
+                            number: 80
+        tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+        - hosts:
+            - mydomain.com
+            secretName: myingress-cert # < cert-manager will store the created certificate in this secret.

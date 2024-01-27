@@ -1,0 +1,26 @@
+#webui should only be able to communicate with webapi and not with database
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: webui-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: webui
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: webapi
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: webapi
+
+
+
