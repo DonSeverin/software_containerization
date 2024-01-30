@@ -68,3 +68,29 @@ spec:
         - hosts:
             - mydomain.com
             secretName: myingress-cert # < cert-manager will store the created certificate in this secret.
+
+cat <<EOF | kubectl apply -f -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: john
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1pEQ0NBVXdDQVFBd0h6RU9NQXdHQTFVRUF3d0ZhbTlvYml3eERUQUxCZ05WQkFvTUJHVmthWFF3Z2dFaQpNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUM5OG1UVEU4RnRDZFF5NnV1MitCZmNqVjZIClVDd1NuU3RwQWM4dXY3a2hnZ3pyWXY0VXNwSW4xTjlpL21heEE0b3VmYWxRNHFEU2N1TUxBYklzdmVjUjVQVHIKWHpZWmZtU1JUOUQ2SHQvNWxTUkZYLzRLVTk1MElpOVZIeThPRHkwYVd3S0dvUlBJWmYzcjNhYlNVbk8xVWRrYgovZUdQVDBJZm9rZVFIcHBPOTRFcXJFKzVYY29hRDJiem9qK1c1MEFYSndIQTlkbitkWVhEcGo4QTJmQ3BBM2VRCnBWL1ZUMGZYL05zOFpFL2RGZkZBaW1lWTVlMGdXakEvQzR5UGxUYkRXblhqNXluQlB6TmNYWHM5RFdJU0V1ckMKMW5XVnZJZnFSV29iK245Qy8yTmpaZjFDSzFENnVCNEJaTTdnZ056Q1RicjE5NzdDMHBYYXBOVW96VlhGQWdNQgpBQUdnQURBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVo1OXozTklzWm9ocjkyb20va1VvT0VUSkFxcUVFQUlnCk44OUZ1a3daNTU1eXNxdThVYmY2T2JKbzk2aUVLcUNNb2daMGJWWUNPUGx1aWN2TlJMbVZJanNQTGlsaUVVK3QKRzJKVmJiRGRXSUU1RDVnc056R3c1SFl1M3dsUExvRDZ1anJ0alVjeXY5cXkwQzJvczNlZ0xEQXFQVzdENVd4aQpsbVpjMlJWZmR1Nmw2aEh4SHdTSFgxR1B5Sk9wNi81ekVUeWFwWVhBenl2MXZNdE1FODhaakpQR0dtRUdqTUxrCkJmOS9ieFRTU3FTa3VYeXFvb3diLytuVWMyRXdTc3o0ZlczNnBvZWtMd1QyTjEwbVBBOG9Wa3hVbUp0NVhLQzcKY0Rib3JuMlRWZnE0QiszTHozcms5VlczeUNWTjY3RW04WTA3VGN3Y0ZWWmRBckpQYUdGUnl3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+EOF
+
+kubectl get csr/user -o jsonpath="{.status.certificate}" | base64 -d > user.crt
+
+kubectl --kubeconfig user-kube-config config set-credentials user --client-key /home/michelerieppi/Certificates/user.key --client-certificate /home/michelerieppi/Certificates/user.csr --embed-certs=true
+kubectl config set-credentials john --client-certificate=/home/michelerieppi/Certificates/john.csr --client-key=/home/michelerieppi/Certificates/john.key --embed-certs=true
+
+
+kubectl --kubeconfig user-kube-config config set-context user --cluster default --user user
+kubectl config set-context john --cluster default --user john
+
+kubectl create role pod-manager --verb=create,list,get --resource=pods --namespace=default
+
+kubectl create clusterrolebinding user-pod-manager --clusterrole=pod-manager --user=user
