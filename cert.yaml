@@ -4,7 +4,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
     name: selfsigned-cluster-issuer
-    #namespace: default
+    namespace: default
 spec:
     selfSigned: {}
 
@@ -18,7 +18,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
     name: my-selfsigned-ca
-    #namespace: default 
+    namespace: default 
 spec:
     isCA: true
     commonName: my-selfsigned-ca
@@ -51,7 +51,7 @@ metadata:
         cert-manager.io/issuer: my-ca-issuer
         cert-manager.io/common-name: mydomain.com
     name: my-ingress
-    namespace: sandbox
+    namespace: default
 spec:
     rules:
         - host: mydomain.com
