@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webui-service
+spec:
+  type: LoadBalancer # Exposes the service externally using a cloud provider's load balancer
+  selector:
+    app: webui
+  ports:
+    - protocol: TCP
+      port: 80 # The service port
+      targetPort: 80 # The target port on the container

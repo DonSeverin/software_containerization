@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui-deployment
+spec:
+  replicas: 3 # Specifies the number of replicas
+  selector:
+    matchLabels:
+      app: webui
+  template:
+    metadata:
+      labels:
+        app: webui
+    spec:
+      containers:
+        - name: webui
+          image: europe-west1-docker.pkg.dev/turnkey-cyclist-410922/my-repo/webui:v1
+          ports:
+            - containerPort: 80 # The container listens on port 80
