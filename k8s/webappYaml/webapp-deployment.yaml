@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blogger-app-deployment
+  labels:
+    app: blogger_app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blogger_app
+  template:
+    metadata:
+      labels:
+        app: blogger_app
+    spec:
+      containers:
+      - name: bloggerappcontainer
+        image: 35783594/blogger_app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+          - name: POSTGRES_HOST
+            value: "postgres-service"
+          - name: POSTGRES_DB
+            value: "blog_db"
+          - name: POSTGRES_USER
+            value: "blogger"
+          - name: POSTGRES_PASSWORD
+            value: "Self.blogdb"

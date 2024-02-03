@@ -1,23 +1,27 @@
 # Kill Port
-sudo fuser -k 8000/tcp  
+---------------------------------------------------------------------------------- 
+
 
 # postgress incase of a refresh 
-
+-----------------------------------------------------------------------------------
 sudo -u postgres psql
 postgres=# create database blog_db;
 postgres=# create user blogger with encrypted password 'Self.blogdb';
 postgres=# grant all privileges on database blog_db to blogger;
 
+
+
 # Startup 
-Run Environment: source fioenv/bin/activate
-Directory: cd flintio_ws/
+-----------------------------------------------------------------------------------
+Run Environment: source venv/bin/activate
+Directory: cd 
 Run: python3 manage.py runserver 
 install req: pip3 install -r requirments.txt
 
 
 
 # docker commands
-
+-----------------------------------------------------------------------------------
 # Remove containers
 docker rm -f <the-container-id>: remove and stop container 
 
@@ -33,6 +37,8 @@ docker push new-repo:tagname
 
 # inspecting container - networking
 docker run -it --network blog_network nicolaka/netshoot
+
+
 
 
 # Build comands for docker apps
@@ -80,5 +86,37 @@ docker run -dp 3000:3000 \
   35783594/blogger_api
 
   ------------------------------------------------------------
- 
   
+  # useful commands
+  microk8s kubectl delete pods --all -n default
+  microk8s kubectl get pods
+  microk8s kubectl config view
+  microk8s kubectl get svc
+  microk8s kubectl logs deployment.apps/blogger-api-deployment
+
+
+
+# Kubernetes Deployment commands
+  -------------------------------------------------------------
+
+# API Commands
+  microk8s kubectl apply -f apiapp-deployment.yaml
+  microk8s kubectl apply -f apiapp-service.yaml
+
+# Web Application Commands
+  microk8s kubectl apply -f webapp-deployment.yaml
+  microk8s kubectl apply -f webapp-service.yaml
+
+
+# DB commands
+  microk8s kubectl apply -f postgres-config.yaml -
+  microk8s kubectl apply -f postgres-secret.yaml - 
+  microk8s kubectl apply -f postgres-storage.yaml -
+  microk8s kubectl apply -f postgres-deployment.yaml - 
+  microk8s kubectl apply -f postgres-service.yaml -
+
+
+
+
+# Ports and paths 
+Web Appllication port http://172.24.243.165:31000/ -- Cunsult your local ip in kubernetes

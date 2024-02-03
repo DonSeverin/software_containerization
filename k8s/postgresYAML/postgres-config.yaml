@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_PASSWORD: Self.blogdb
+  POSTGRES_USER: blogger
+  POSTGRES_DB: blog_db
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: "5432"

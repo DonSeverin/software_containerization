@@ -93,28 +93,28 @@ WSGI_APPLICATION = 'blogging_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'blog_db',
-#         'USER': 'blogger',
-#         'PASSWORD': 'Self.blogdb',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-# docker settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'blog_db '),
-        'USER': os.environ.get('POSTGRES_USER', 'blogger'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'Self.blogdb'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'NAME': 'blog_db',
+        'USER': 'blogger',
+        'PASSWORD': 'Self.blogdb',
+        'HOST': 'postgres-service',
         'PORT': '5432',
     }
 }
+
+# docker settings
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('POSTGRES_DB', 'blog_db'),
+#         'USER': os.environ.get('POSTGRES_USER', 'blogger'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'Self.blogdb'),
+#         'HOST': os.environ.get('POSTGRES_HOST', 'postgres-service'),
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
