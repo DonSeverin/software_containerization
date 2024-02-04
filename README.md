@@ -173,11 +173,12 @@ Since we didn't have a domain name, we've used the IP address of the webui servi
 In the project we've organized our three different services (webui, api and database) in a way that allows each of them to communicate with the others. However, we want to make sure that the communication between the services is secure and that no unauthorized access is allowed. To do so, we've implemented network policies in our Kubernetes cluster.
 In particular, as stated in the policies yaml files, we can see that the webui is allowed to communicate only with the webapi, the web api connects to both webui and db and the db is allowed to communicate only with the webapi.
 
-To test the network policies, we can create a pod in the same namespace with the webui label and try to wget the webapi. We can see that the ping is successful. Then, we can try to wget the db and we can see that the ping fails. This can be done with the following commands
+To test the network policies, we can create a pod in the same namespace with the webui label and try to wget the webapi. We can see that the command is successful. Then, we can try to wget the db and we can see that the command fails. This can be done with the following commands
 
 ```bash
 kubectl run test-pod --image=alpine -lapp=webui -it -- ash
 / # wget webapi:ip
+/ # wget db:ip
 ```
 
 ### RBAC
