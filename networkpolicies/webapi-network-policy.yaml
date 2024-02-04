@@ -1,0 +1,30 @@
+#webapi should be able to communicate with both webui and database:
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: webapi-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: webapi
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: webui
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: webui
+    - podSelector:
+        matchLabels:
+          app: database
+
+
+
+
