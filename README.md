@@ -14,17 +14,18 @@ Create Dockerfiles to containerize the REST API and the Web front end.
 
 Create Kubernetes YAML files or a single Helm chart that generate three deployments/statefulsets as appropriate for deploying the three components to a Kubernetes cluster.
 
-Create additional configuration artifacts as described in the Rubric below.
+## Folder Structure
 
-Submit a zip file containing:
+Most of the folders are named pretty intuitively. Some of which need to be explained are: 
 
-1. The source code of your project. Note: the sources are mandatory because we need to ensure that we look at the source files as they were at the time of the submission. Sources include: the application, the Dockerfiles, the Kubernetes YAML files and/or the Kubernetes Helm Charts.
+1. blog-react : This folder contains the source code for the webui. Which is built using React.js.
 
-2. The URL of the GitHub repository where the source code is hosted. If the project is private, add the teacher to the repository.
+2. blogging : Database reelated and a test website for the database and api.
 
-I will look at the project in GitHub just to check who committed what in case there is a doubt about a team member's actual contribution.
+3. k8s : This folder contains all the kubernetes yaml files for the api and database.
 
-3. A README with the instructions to run all the commands that you will show in the presentation.
+4. my-webui-chart : This folder contains the helm chart for the whole app instead of just webui. It's due to the fact that the webui is the only stateless part of the app and we can perform canary/rollout update on it.
+
 
 ## Yuhang(Viktor) Wu's Part:
 
@@ -136,8 +137,8 @@ spec:
   replicas: {{ .Values.stable.replicas }}
   template:
     containers:
-    - name: app
-      image: "myapp:{{ .Values.stable.imageTag }}"
+    - name: webui
+      image: "vikorwu/webui:{{ .Values.stable.imageTag }}"
 
 ---
 apiVersion: apps/v1
@@ -148,8 +149,8 @@ spec:
   replicas: {{ .Values.canary.replicas }}
   template:
     containers:
-    - name: app
-      image: "myapp:{{ .Values.canary.imageTag }}"
+    - name: webui
+      image: "vikorwu/webui:{{ .Values.canary.imageTag }}"
 ```
 
 ## Michele Rieppi's Part:

@@ -8,24 +8,6 @@ function classNames(...classes) {
 }
 
 export default function Feed() {
-  let [category] = useState({
-    Posts: [
-      {
-        id: 1,
-        title: "Why we really need K8s",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        date: "2024-01-14",
-    }
-    ,
-    {
-      id: 2,
-      title: "Why we really need K8s",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      date: "2024-01-14",
-  },
-    ],
-  });
-
   const [selectedPost, setSelectedPost] = useState(null);
   const [categories, setCategories] = useState({
     Posts: [],
@@ -38,7 +20,9 @@ export default function Feed() {
     // Fetch posts from the provided API endpoint
     const fetchPosts = async () => {
       try {
-        const response = await fetch('https://dummyjson.com/posts?limit=8');
+        const response = await fetch(
+          'http://blogger-api-service:8081'
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch posts');
         }
@@ -86,20 +70,23 @@ export default function Feed() {
                 {posts.map((post) => (
                   <li
                     key={post.id}
-                    className={`relative text rounded-md p-3 text-white hover:bg-white/[0.12]  transition-all duration-300 ease-in-out ${selectedPost === post ? 'text-black' : ''}`}
+                    className={`relative text rounded-md p-3 text-white hover:bg-white/[0.12]  transition-all duration-300 ease-in-out ${
+                      selectedPost === post ? 'text-black' : ''
+                    }`}
                     onClick={() => handlePostClick(post)}
                   >
                     <h3 className={`text-lg font-medium leading-5 `}>
                       {post.title}
                     </h3>
                     {selectedPost === post && (
-                      <p className={`mt-2 py-3 pl-5 text-base font-normal leading-4 `}>
+                      <p
+                        className={`mt-2 py-3 pl-5 text-base font-normal leading-4 `}
+                      >
                         {post.body}
                       </p>
                     )}
                     <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500 ">
                       <li>date: {post.date} </li>
-                      
                     </ul>
 
                     <button
@@ -115,9 +102,7 @@ export default function Feed() {
           ))}
         </Tab.Panels>
       </Tab.Group>
-      <PostButton/>
-      
-        
+      <PostButton />
     </div>
   );
 }

@@ -22,7 +22,7 @@ const PostButton = () => {
       date: currentDate,
     });
 
-    fetch('your-api-endpoint', {
+    fetch('http://blogger-api-service:8081', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,12 +74,12 @@ const PostButton = () => {
         {isInputVisible && (
           <div className="mt-4">
             <input
-            type="text"
-            className="w-full border p-2 mb-2 rounded-sm transition-all duration-300 ease-in"
-            placeholder="Enter post title..."
-            value={postTitle}
-            onChange={(e) => setPostTitle(e.target.value)}
-          />
+              type="text"
+              className="w-full border p-2 mb-2 rounded-sm transition-all duration-300 ease-in"
+              placeholder="Enter post title..."
+              value={postTitle}
+              onChange={(e) => setPostTitle(e.target.value)}
+            />
             <textarea
               className="w-full h-32 border rounded-sm transition-all duration-300 ease-in"
               placeholder="Write your post..."
