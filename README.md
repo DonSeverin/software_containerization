@@ -168,7 +168,7 @@ Since we didn't have a domain name, we've used the IP address of the webui servi
 
 ### Network Policies
 
-![alt text](image/Networkpolicies.png)
+![alt text](images/Networkpolicies.png)
 
 In the project we've organized our three different services (webui, api and database) in a way that allows each of them to communicate with the others. However, we want to make sure that the communication between the services is secure and that no unauthorized access is allowed. To do so, we've implemented network policies in our Kubernetes cluster.
 In particular, as stated in the policies yaml files, we can see that the webui is allowed to communicate only with the webapi, the web api connects to both webui and db and the db is allowed to communicate only with the webapi.
