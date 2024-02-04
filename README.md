@@ -25,3 +25,129 @@ Submit a zip file containing:
 I will look at the project in GitHub just to check who committed what in case there is a doubt about a team member's actual contribution.
 
 3. A README with the instructions to run all the commands that you will show in the presentation.
+
+## Yuhang(Viktor) Wu's Part:
+
+Personal Information:
+| Student Email       | Legal Name       | GitHub Username |
+|---------------------|------------------|-----------------|
+| y.wu14@student.vu.nl| Yuhang Wu        | usher233         |
+
+### WebUI
+![Alt text](images/UML_webui.png)
+
+The website of our project is a simple blog application where users can create and read posts. The website is built using React.js. Hosted on Ngnix, the website is a single page application. Dockerfile is used to containerize the website.
+
+When click on the "Create Post" button, the input form will show up. After filling in the title and content of the post, click on the "Submit" button to create a new post. The new post will be posted to the api and then stored in the database. The posts will then be displayed on the website. At the same time, a notification will show up at the middle of the screen to indicate that the post has been successfully created.
+
+To build the webui image and push it to hub registry, run the following command in the blog-react directory:
+
+```bash
+docker build -t <your_hub_username>/webui:<ver> .
+docker push <your_hub_username>/webui:<ver>
+```
+
+In this case, the hub username is "viktorwu" and the version number is "v1" and "v2" for two different versions of the applications. You can find the Docker Hub repository for the web UI image at [viktorwu/webui](https://hub.docker.com/repository/docker/viktorwu/webui).
+
+### Artifacts Registry and GKE
+
+I also pushed the images of the webui, api and database to the artifact registry on GCP. The images are then used to deploy on the GKE.
+
+### Helm Charts on GKE
+
+After my teammate finished the api and database part, I created the Helm Charts for the whole project. The Helm Charts are used to deploy the whole project to GKE. Only the WebUI related yaml files are dynamical because:
+
+1. Those of the api and database are already finished and can be reused
+directly in the template.
+2. I only perform canary/rollout update on the webui part.
+To create, install, update and uninstall the Helm Charts, run the following commands:
+
+```bash
+helm create blog-react
+helm install blog-react blog-react
+helm upgrade blog-react blog-react
+helm uninstall blog-react
+```
+
+Two main points to note in the Helm Charts are:
+
+1. How to scale the application horizontally (stateless parts only)?
+
+For this project, the webui is the only stateless part. Of course, to scale the webui, we can simply change the replicaCount in the values.yaml file. The deployment.yaml file in the templates folder will then be updated to reflect the change:
+
+```yaml
+replicaCount: 3 # The number of replicas, in values.yaml
+```
+
+```yaml
+# deployment.yaml
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+```
+
+However, we usually don't want to manually change the replicaCount every time we want to scale the webui. We can use the autoscaler to automatically scale the webui when needed. To enable the autoscaler, set the enabled field to true in the values.yaml file, and set the parameters for the autoscaler:
+
+```yaml
+# values.yaml
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  ```
+  
+  The template for Helm Charts has a predefined hpa.yaml file in the templates folder. So we don't need to create a new one. The hpa.yaml file will be updated to reflect the changes in the values.yaml.
+
+ 2. How to perform a update?
+
+To perform a update, we need to change the image tag in the values.yaml file. The deployment.yaml file in the templates folder will then be updated to reflect the change. It's easy to perform a rollout update with Helm Charts because Helm Charts support the rollingUpdate strategy by default. The rollingUpdate strategy is defined in the values.yaml file:
+
+```yaml
+# strategy of values.yaml for deployment rollout
+strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+```
+
+For Canary update, it involves managing two different sets of configurations: one for the stable version of your application and another for the canary version. So we need to create a new deployment.yaml file in the templates folder. And define how many replicas for the stable version and the canary version in the values.yaml file:
+
+```yaml
+# values.yaml
+stable:
+  replicas: 5
+  imageTag: "v2"
+
+canary:
+  replicas: 1
+  imageTag: "v1"
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-stable
+spec:
+  replicas: {{ .Values.stable.replicas }}
+  template:
+    containers:
+    - name: app
+      image: "myapp:{{ .Values.stable.imageTag }}"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-canary
+spec:
+  replicas: {{ .Values.canary.replicas }}
+  template:
+    containers:
+    - name: app
+      image: "myapp:{{ .Values.canary.imageTag }}"
+```
