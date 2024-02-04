@@ -151,3 +151,10 @@ spec:
     - name: app
       image: "myapp:{{ .Values.canary.imageTag }}"
 ```
+
+## Michele Rieppi's Part:
+
+Personal Information:
+| Student Email         | Legal Name       | GitHub Username|
+|-----------------------|------------------|----------------|
+| m.rieppi@student.vu.nl| Michele Rieppi   | Riepp0         |
