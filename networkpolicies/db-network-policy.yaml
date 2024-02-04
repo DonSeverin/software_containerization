@@ -7,15 +7,11 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: database
+      app: postgres
   policyTypes:
   - Ingress
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          app: webapi
-
-
-
-
+          app: blogger_api

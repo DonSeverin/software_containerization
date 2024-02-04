@@ -15,12 +15,9 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: webapi
+          app: blogger_api
   egress:
   - to:
     - podSelector:
         matchLabels:
-          app: webapi
-
-
-
+          app: blogger_api
