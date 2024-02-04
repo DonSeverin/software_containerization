@@ -158,3 +158,36 @@ Personal Information:
 | Student Email         | Legal Name       | GitHub Username|
 |-----------------------|------------------|----------------|
 | m.rieppi@student.vu.nl| Michele Rieppi   | Riepp0         |
+
+### Certificates
+
+![Alt text](images/Certificates.png)
+
+For the certificates part of the project, we've created a self-signed CA certificate and used it to sign the certificats for the webui. The yaml files have been created following the slides examples provided during the lectures. The certficates have been correctly applied to the cluster and the keys have been stored in a secret file stored in the /tls folder. 
+Since we didn't have a domain name, we've used the IP address of the webui service as the common name for the certificate and we've tested the certificates on the localhost machine locally using microk8s.
+
+### Network Policies
+
+![alt text](image/Networkpolicies.png)
+
+In the project we've organized our three different services (webui, api and database) in a way that allows each of them to communicate with the others. However, we want to make sure that the communication between the services is secure and that no unauthorized access is allowed. To do so, we've implemented network policies in our Kubernetes cluster.
+In particular, as stated in the policies yaml files, we can see that the webui is allowed to communicate only with the webapi, the web api connects to both webui and db and the db is allowed to communicate only with the webapi.
+
+To test the network policies, we can create a pod in the same namespace with the webui label and try to wget the webapi. We can see that the ping is successful. Then, we can try to wget the db and we can see that the ping fails. This can be done with the following commands
+
+```bash
+kubectl run test-pod --image=alpine -lapp=webui -it -- ash
+/ # wget webapi:ip
+```
+
+### RBAC
+
+![alt text](images/RBAC.png)
+
+In the project we've created 3 different users: developer, newuser and viewuser. The developer has a lot of priviledges and he can create, delete and modify a lot of resources in the cluster. The newuser has only the right to get watch and list the pods and the viewuser has only the right to view the pods. The users have been created generating self-signed certificates with openssl and then applying them to the cluster. The users permissions have been tested using the auth command as shwon below:
+  
+  ```bash
+kubectl auth can-i delete pods --namespace default --as newuser
+kubectl auth can-i delete pods --namespace default --as viewuser
+kubectl auth can-i delete pods --namespace default --as developer
+```
