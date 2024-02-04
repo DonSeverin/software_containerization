@@ -168,7 +168,7 @@ Since we didn't have a domain name, we've used the IP address of the webui servi
 
 ### Network Policies
 
-![alt text](images/Networkpolicies.png)
+![alt text](images/Policies.png)
 
 ! The policies might be different from the presentation due to the change of some labels in the project. !
 
